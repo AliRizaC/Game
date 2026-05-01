@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enesin ESTER'E yolu - Tam Sürüm</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <video autoplay muted loop playsinline id="bg-video">
+        <source src="images/wallvideo.mp4" type="video/webm">
+        <source src="images/wallvideo.mp4" type="video/mp4">
+    </video>
+    <div id="startScreen" class="screen">
+        <h1>Enesin ESTER'E yolu</h1>
+        <p>Yeşil oktan (Giriş) başla, kırmızı oka (Çıkış) ulaş!</p>
+        <button id="startBtn" class="btn primary-btn">Oyuna Başla</button>
+    </div>
+
+    <div id="levelScreen" class="screen" style="display: none;">
+        <h2>Seviye Seç</h2>
+        <div id="levelGrid"></div>
+        <button id="backBtn" class="btn secondary-btn">Ana Menüye Dön</button>
+    </div>
+
+    <div id="gameScreen" class="screen" style="display: none;">
+        <div class="game-layout">
+            <div class="layout-left"></div>
+
+            <div class="layout-center">
+                <div class="game-header">
+                    <h3 id="currentLevelText">Level 1</h3>
+                    <div class="header-buttons">
+                        <button id="restartBtn" class="btn action-btn small-btn">⟳ Yeniden Başlat</button>
+                        <button id="returnToMenuBtn" class="btn secondary-btn small-btn">Menü</button>
+                    </div>
+                </div>
+                
+                <canvas id="gameCanvas" width="600" height="600"></canvas>
+                
+                <div class="game-controls">
+                    <button id="checkPathBtn" class="btn action-btn" style="background-color: #43A047;">Kontrol Et</button>
+                    <p id="messageArea"></p>
+                </div>
+            </div>
+
+            <div class="layout-right">
+                <div class="side-panel">
+                    <div class="game-stats" id="gameStats">
+                        <div id="timeWrapper">⏱<span id="timeDisplay">30</span> Saniye</div>
+                        <div id="turnWrapper">🔄<span id="turnDisplay">15</span> Hamle</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
