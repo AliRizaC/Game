@@ -1,7 +1,9 @@
 # Game
-OYUN LİNKİ
+
+Oyun Linki
 
 https://alirizac.github.io/Game/
+
 
 KAYNAKCA
 
