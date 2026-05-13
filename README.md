@@ -1,6 +1,6 @@
 Oyun Linki
 
-
+MAZE BALL
 
 https://alirizac.github.io/Game/
 
