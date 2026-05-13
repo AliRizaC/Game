@@ -1,7 +1,5 @@
-// ==========================================
-// 1. VERİ: LEVELLER (Sabit Veri - Data Driven Design)
+// 1. VERİ: LEVELLER
 // Bu bölüm oyunun veritabanıdır. Mantık ve görselden tamamen izoledir.
-// ==========================================
 const LEVELS_DATA = [
     {
         gridSize: 3, timeLimit: 10, turnLimit: 10, 
@@ -96,9 +94,7 @@ const LEVELS_DATA = [
     }
 ];
 
-// ==========================================
-// 2. SES YÖNETİMİ (Kapsüllenmiş Audio Sınıfı)
-// ==========================================
+// 2. SES YÖNETİMİ
 class AudioController {
     constructor() {
         // Tarayıcı belleğine sesleri alıp nesne olarak tutuyoruz.
@@ -113,7 +109,7 @@ class AudioController {
         // Aksiyon sesini zorla sustur, başa sar. Sonra BG müziğini çal.
         this.actionMusic.pause();
         this.actionMusic.currentTime = 0;
-        // catch: Tarayıcılar kullanıcı tıklamadan ses çalmaya izin vermez. Hata verirse sessizce yut.
+        // catch: Tarayıcılar kullanıcı tıklamadan ses çalmaya izin vermez. Hata mesajı verir.
         this.bgMusic.play().catch(e => console.warn("Müzik çalınamadı (Kullanıcı etkileşimi gerekebilir):", e));
     }
     
@@ -136,13 +132,11 @@ class AudioController {
     }
 }
 
-// ==========================================
-// 3. OYUN MOTORU (Mantık, FİZİK ve Algoritma Merkezi)
+// 3. OYUN MOTORU
 // Çizimle işi yoktur, sadece matematik hesaplar.
-// ==========================================
 class GameEngine {
     constructor(levelsData) {
-        // Ana veri kaynağını (database) motorun içine çekiyoruz.
+        // Ana veri kaynağını motorun içine çekiyoruz.
         this.levelsData = levelsData;
         this.totalLevels = levelsData.length;
         this.unlockedLevels = 1; // Oyuncu ilk başta sadece 1. bölümü oynayabilir.
@@ -173,7 +167,7 @@ class GameEngine {
         this.turnsLeft = data.turnLimit;
         this.isGameOver = false;
 
-        // VAZGEÇİLMEZ MÜHENDİSLİK HAMLESİ: Deep Copy (Derin Kopyalama)
+        // Deep Copy (Derin Kopyalama)
         // Eğer this.grid = data.map deseydik, dizinin RAM'deki referansını alırdık.
         // Oyuncu boruyu çevirdiğinde asıl veritabanındaki (LEVELS_DATA) boru da kalıcı olarak dönerdi.
         // Bu yüzden iki katmanlı map() fonksiyonu ile yepyeni, bağımsız bir array oluşturuyoruz.
@@ -196,7 +190,7 @@ class GameEngine {
     }
 
     getPorts(cell) {
-        // Bu metod, o anki hücrenin HANGİ YÖNLERE bağlantısı olduğunu [Kuzey, Doğu, Güney, Batı] şeklinde döndürür.
+        // Bu metod, o anki hücrenin hangi yönlere bağlantısı olduğunu [Kuzey, Doğu, Güney, Batı] şeklinde döndürür.
         if (cell.type === 'empty') return [0, 0, 0, 0]; // Lav hücresi kapalıdır.
         
         let base = [];
@@ -212,25 +206,22 @@ class GameEngine {
         // Orijinal base dizisini bozmamak için kopyasını (ports) oluştur.
         let ports = [...base]; 
         
-        // KAFA YAKAN KISIM: Dairesel Kaydırma (Circular Shift)
-        // Boru saat yönünde 90 derece dönerse, açık olan portlar da dizide 1 index sağa kayar.
-        // pop() son elemanı alır çıkarır, unshift() onu alıp dizinin en başına ekler.
-        for (let i = 0; i < shifts; i++) {
-            ports.unshift(ports.pop());
+        // Dairesel  Kaydırma (Circular Shift)
+        for (let i = 0; i < shifts; i++) {// Boru saat yönünde 90 derece dönerse, açık olan portlar da dizide 1 index sağa kayar.
+            ports.unshift(ports.pop());   // pop() son elemanı alır çıkarır, unshift() onu alıp dizinin en başına ekler.
+
         }
         return ports;
     }
 
-    findPath() {
-        // OYUNUN KALBİ: DFS (Derinlik Öncelikli Arama) YOL BULMA ALGORİTMASI
-        
+    findPath() { // DFS (Derinlik Öncelikli Arama) Yol Bulma algoritması
         // 1. Önce başlangıç hücresinin mevcut durumda hangi yönlere açık olduğuna bakıyoruz.
         let startPorts = this.getPorts(this.grid[this.startCell.r][this.startCell.c]);
         
         // 2. Eğer oyunun istediği çıkış yönü (startCell.edge) şu an kapalıysa baştan kaybettik, null dön.
         if (startPorts[this.startCell.edge] === 0) return null; 
 
-        // 3. Geçtiğimiz hücrelere bir daha girip sonsuz döngüye girmemek için "ziyaret edildi" (visited) haritası çıkar.
+        // 3. Geçtiğimiz hücrelere bir daha girip sonsuz döngüye girmemek için "ziyaret edildi" haritası çıkar.
         let visited = Array(this.gridSize).fill().map(() => Array(this.gridSize).fill(false));
         
         // 4. Recursive (Özyinelemeli) Arama Fonksiyonu
@@ -248,28 +239,28 @@ class GameEngine {
             let newPath = [...currentPath, {r, c}]; 
             let myPorts = this.getPorts(this.grid[r][c]); // Bulunduğum hücrenin delikleri
             
-            // ZAFER KONTROLÜ: Eğer bitiş hücresine ulaştıysak...
+            // Eğer bitiş hücresine ulaştıysak...
             if (r === this.endCell.r && c === this.endCell.c) {
                 // ...ve oyunun istediği son çıkış kapısı açıksa tebrikler, yolu geri fırlat.
                 if (myPorts[this.endCell.edge] === 1) return newPath; 
                 return null;
             }
             
-            // KOMŞU KONTROLLERİ VE İLERLEME:
-            // KUZEYE GİT: Benim kuzeyim (0) açık mı? VE Üstümde satır var mı? VE Üstümdeki hücrenin GÜNEYİ (2) açık mı? (İki boru birbirine öpüşüyor mu?)
+            // Komşu Kontroller ve İlerleme
+            // KUZEYE GİT: Benim kuzeyim (0) açık mı? Ve Üstümde satır var mı? Ve Üstümdeki hücrenin Güneyi (2) açık mı? (İki boru birbirine örtüşüyor mu?)
             if (myPorts[0] && r > 0 && this.getPorts(this.grid[r-1][c])[2]) { 
                 let res = search(r-1, c, newPath); // Şartlar uyuyorsa kuzeye recursive dalış yap
                 if(res) return res; // Yol bulduysa o yolu en üst katmana kadar iade et
             } 
-            // DOĞUYA GİT: Benim doğum (1) açık mı? VE Sağımda sütun var mı? VE Sağdakinin BATISI (3) açık mı?
+            // DOĞUYA GİT: Benim doğum (1) açık mı? Ve Sağımda sütun var mı? Ve Sağdakinin Batısı (3) açık mı?
             if (myPorts[1] && c < this.gridSize-1 && this.getPorts(this.grid[r][c+1])[3]) { 
                 let res = search(r, c+1, newPath); if(res) return res; 
             } 
-            // GÜNEYE GİT: Benim güneyim (2) açık mı? VE Altımda satır var mı? VE Alttakinin KUZEYİ (0) açık mı?
+            // GÜNEYE GİT: Benim güneyim (2) açık mı? Ve Altımda satır var mı? VE Alttakinin Kuzeyi (0) açık mı?
             if (myPorts[2] && r < this.gridSize-1 && this.getPorts(this.grid[r+1][c])[0]) { 
                 let res = search(r+1, c, newPath); if(res) return res; 
             } 
-            // BATIYA GİT: Benim batım (3) açık mı? VE Solumda sütun var mı? VE Soldakinin DOĞUSU (1) açık mı?
+            // BATIYA GİT: Benim batım (3) açık mı? Ve Solumda sütun var mı? Ve Soldakinin Doğusu (1) açık mı?
             if (myPorts[3] && c > 0 && this.getPorts(this.grid[r][c-1])[1]) { 
                 let res = search(r, c-1, newPath); if(res) return res; 
             } 
@@ -278,15 +269,13 @@ class GameEngine {
             return null; 
         };
         
-        // DFS'i ilk kez Başlangıç noktasından ve boş bir yol dizisiyle [] ateşliyoruz.
+        // DFS'i ilk kez Başlangıç noktasından ve boş bir yol dizisiyle [] başlatıryoruz.
         return search(this.startCell.r, this.startCell.c, []);
     }
 }
 
-// ==========================================
-// 4. ÇİZİM MOTORU (Renderer)
+// 4. ÇİZİM MOTORU 
 // Motorun ürettiği matematiksel veriyi Canvas üzerinde piksellere dönüştürür.
-// ==========================================
 class Renderer {
     constructor(canvas) {
         this.canvas = canvas;
@@ -295,7 +284,7 @@ class Renderer {
     }
 
     loadImages() {
-        // Gereksiz 404 hatası veren bg (arkaplan) resmini buradan uçurduk. Sadece elzem objeler var.
+        // Gereksiz 404 hatası veren bg (arkaplan) resmini buradan kaldırdık. Sadece gerekli objeler var.
         const imgs = {
             straight: new Image(), corner: new Image(), tShape: new Image(),
             cross: new Image(), empty: new Image()
@@ -309,13 +298,13 @@ class Renderer {
     }
 
     drawGame(engine, characterPos) {
-        // Çizim yapmadan önce her seferinde bir önceki karenin(frame) kalıntılarını siliyoruz.
+        // Çizim yapmadan önce her seferinde bir önceki karenin kalıntılarını siliyoruz.
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         
         // Dinamik hücre boyutu hesaplama (Ekran 500px, grid 5 ise hücre başı 100px düşer).
         const tileSize = this.canvas.width / engine.gridSize;
 
-        // MATRİSİ ÇİZ (O(N^2) karmaşıklığıyla tüm gridi dolaşır)
+        // MATRİSİ ÇİZ: tüm gridi dolaşır)
         for (let row = 0; row < engine.gridSize; row++) {
             for (let col = 0; col < engine.gridSize; col++) {
                 let cell = engine.grid[row][col];
@@ -338,7 +327,7 @@ class Renderer {
             }
         }
 
-        // HÜCRE ÜSTÜ BİLDİRİMLER: Başlangıç ve bitiş oklarını ilgili hücrenin yanına çizdir.
+        //Başlangıç ve bitiş oklarını ilgili hücrenin yanına çizdir.
         this.drawGateArrow(engine.startCell, tileSize, 'start');
         this.drawGateArrow(engine.endCell, tileSize, 'end');
 
@@ -349,10 +338,10 @@ class Renderer {
     }
 
     drawNode(x, y, tileSize, type, angle) {
-        // ÇOK ÖNEMLİ: Canvas işlemleri. Ekranda bir resmi döndürmek (rotate) için merkez noktasını kaydırman gerekir.
+        // ÇOK ÖNEMLİ: Canvas işlemleri. Ekranda bir resmi döndürmek (rotate) için merkez noktasını kaydırmamız gerekir.
         this.ctx.save(); // Fırçanın 0,0 (sol üst) konumunu ve tüm ayarlarını hafızaya al.
         
-        // Fırçayı tam hücrenin MERKEZİNE taşı.
+        // Fırçayı tam hücrenin Merkezine taşı.
         this.ctx.translate(x + tileSize / 2, y + tileSize / 2);
         
         // Tüm tuvali (canvas) belirtilen açı (angle) kadar döndür. Formül Dereceyi Radyana çevirir.
@@ -367,8 +356,7 @@ class Renderer {
 
         // Resim başarılı yüklendiyse çiz.
         if (img && img.complete && img.naturalHeight !== 0) {
-            // DİKKAT: Fırça şu an hücrenin merkezinde olduğu için, resmin tam ortalanması adına çizime 
-            // Genişliğin yarısı kadar GERİDEN (-tileSize/2) başlamamız gerekiyor.
+            //Fırça şu an hücrenin merkezinde olduğu için, resmin tam ortalanması adına çizime genişliğin yarısı kadar geriden başlamamız gerekiyor.
             this.ctx.drawImage(img, -tileSize / 2, -tileSize / 2, tileSize, tileSize);
         } else {
             // İnternet sorunu varsa oyun kilitlenmesin diye düz mavi karelerle (fillRect) kaba bir boru çizimi yapıyoruz.
@@ -380,7 +368,7 @@ class Renderer {
             else if (type === '+') { this.ctx.fillRect(-thick/2, -tileSize/2, thick, tileSize); this.ctx.fillRect(-tileSize/2, -thick/2, tileSize, thick); }
         }
         
-        // Fırçayı döndürülmüş merkezden kurtar ve eski (0,0) konumuna sıfırla ki diğer hücreleri yamuk çizmeyesin.
+        // Fırçayı döndürülmüş merkezden kurtar ve eski (0,0) konumuna sıfırla ki diğer hücreleri yamuk çizmesin.
         this.ctx.restore(); 
     }
 
@@ -430,13 +418,11 @@ class Renderer {
     }
 }
 
-// ==========================================
-// 5. OYUN YÖNETİCİSİ (ANA KONTROLCÜ - MVC'nin C'si)
-// Veri (Engine) ve Görüntü (Renderer) sınıflarını birbiriyle konuşturan komutan.
-// ==========================================
+// 5. OYUN YÖNETİCİSİ (ANA KONTROLCÜ)
+// Veri ve Görüntü  sınıflarını birbiriyle konuşturur.
 class GameController {
     constructor() {
-        // Alt sistemleri (bağımlılıkları) kur.
+        // Alt sistemleri kur.
         this.engine = new GameEngine(LEVELS_DATA);
         this.renderer = new Renderer(document.getElementById('gameCanvas'));
         this.audio = new AudioController();
@@ -495,7 +481,7 @@ class GameController {
     }
 
     startLevel(levelNum) {
-        // Motoru (GameEngine) yeni level için formatla.
+        // Motoru yeni level için formatla.
         this.engine.loadLevel(levelNum);
         
         // Eski animasyon ve karakter pozisyonlarını sıfırla.
@@ -523,7 +509,7 @@ class GameController {
         // Animasyon esnasında veya oyun bittiğinde tıklamaları reddet.
         if (this.isAnimating || this.engine.isGameOver) return;
         
-        // VAZGEÇİLMEZ DÖNÜŞÜM: Tıklanan fare piksellerini (Örn: X:250, Y:130) grid indexine (Satır:1, Sütun:2) çeviririz.
+        // Tıklanan fare piksellerini (Örn: X:250, Y:130) grid indexine (Satır:1, Sütun:2) çeviririz.
         const rect = this.renderer.canvas.getBoundingClientRect(); // Canvas'ın sayfadaki konumunu al
         const tileSize = this.renderer.canvas.width / this.engine.gridSize; // Hücre boyutunu bul
         
@@ -610,7 +596,7 @@ class GameController {
     }
 
     runAnimation(pathCoordinates) {
-        // ANİMASYON FİZİĞİ (Euclidean Distance & Linear Interpolation)
+        // ANİMASYON FİZİĞİ
         this.isAnimating = true;
         const tileSize = this.renderer.canvas.width / this.engine.gridSize;
         let waypoints = []; // Karakterin uğrayacağı fiziksel pikseller listesi
@@ -625,26 +611,26 @@ class GameController {
             if (edge === 3) return { x: cx - tileSize/2, y: cy };
         };
 
-        // 1. Waypoint (Durak Noktası): Başlangıç kapısının ucu.
+        // 1. Durak Noktası: Başlangıç kapısının ucu.
         waypoints.push(getEdgeCoords(this.engine.startCell.r, this.engine.startCell.c, this.engine.startCell.edge));
 
-        // 2. Waypoint'ler: Motorun bulduğu yol koordinatlarını (ör: [1,2], [2,2]) piksele çevirip listeye ekle.
+        // 2. Durak Noktası: Motorun bulduğu yol koordinatlarını (örneğin: [1,2], [2,2]) piksele çevirip listeye ekle.
         for (let i = 0; i < pathCoordinates.length; i++) {
             let cell = pathCoordinates[i];
             waypoints.push({
-                x: cell.c * tileSize + tileSize / 2, // Sütun * Genişlik + Ortalamak için Genişlik/2
+                x: cell.c * tileSize + tileSize / 2, // (Sütun * Genişlik) + (Genişlik/2)
                 y: cell.r * tileSize + tileSize / 2
             });
         }
 
-        // 3. Son Waypoint: Bitiş kapısının ucu.
+        // 3. Son Durak Noktası: Bitiş kapısının ucu.
         waypoints.push(getEdgeCoords(this.engine.endCell.r, this.engine.endCell.c, this.engine.endCell.edge));
 
         let targetIndex = 1; // Hedeflenen sıradaki durak
         this.characterPos = { x: waypoints[0].x, y: waypoints[0].y }; // Karakterin o anki gerçek pozisyonu
         let speed = 5; // Karakter hızı (px/frame)
 
-        // Tarayıcının ekran yenileme hızına (genelde 60FPS) senkronize çalışan Game Loop döngüsü
+        // Tarayıcının ekran yenileme hızına senkronize çalışan Game Loop döngüsü
         const animateFrame = () => {
             if (!this.isAnimating) return; 
 
@@ -652,11 +638,11 @@ class GameController {
             let targetX = waypoints[targetIndex].x;
             let targetY = waypoints[targetIndex].y;
 
-            // X ve Y eksenindeki uzaklık farkları (Delta)
+            // X ve Y eksenindeki uzaklık farkları
             let dx = targetX - this.characterPos.x;
             let dy = targetY - this.characterPos.y;
             
-            // Pisagor teoremi ile kuş uçuşu gerçek mesafeyi (Hipotenüs) buluyoruz. a^2 + b^2 = c^2
+            // Pisagor teoremi ile kuş uçuşu gerçek mesafeyi (Hipotenüs) buluyoruz. (a^2) + (b^2) = c^2
             let distance = Math.sqrt(dx * dx + dy * dy);
 
             // Eğer karakter hedefe kendi hızından daha yakınsa (yani ulaşmak üzereyse) hedefe yapıştır.
@@ -673,7 +659,7 @@ class GameController {
                     return;
                 }
             } else {
-                // Normalize işlemi (Birim vektör bulma): Yön x Hız. 
+                // Birim vektör bulma: Yön x Hız. 
                 // X ve Y'yi kendi toplam mesafelerine bölüp hızla çarparak her iki yönde de dengeli gitmesini sağlıyoruz.
                 this.characterPos.x += (dx / distance) * speed;
                 this.characterPos.y += (dy / distance) * speed;
@@ -686,7 +672,7 @@ class GameController {
             requestAnimationFrame(animateFrame); 
         };
 
-        // Rekürsif animasyon döngüsünü ilk defa ateşliyoruz.
+        // Rekürsif animasyon döngüsünü ilk defa başlatıyoruz.
         animateFrame(); 
     }
 
@@ -719,7 +705,7 @@ class GameController {
         clearInterval(this.timerInterval); // Sayacı öldür
         this.audio.stopAll();
         
-        let msgArea = document.getElementById('messageArea');
+        let msgArea = document.getElementById('messageArea')
         if(msgArea) {
             msgArea.style.color = "#E57373";
             msgArea.innerText = `Oyun Bitti! ${reason}`;
@@ -727,10 +713,8 @@ class GameController {
     }
 }
 
-// ==========================================
-// 6. BAŞLATICI (Bootstrapper)
+// 6. BAŞLATICIF
 // HTML tamamen yüklendikten sonra motoru çalıştırır.
-// ==========================================
 window.onload = () => {
     // Tüm sistemi tetikleyen ana kıvılcım.
     const game = new GameController();
