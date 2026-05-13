@@ -2,52 +2,53 @@
    GENEL SIFIRLAMA VE BODY 
    ========================================== */
 * { 
-    margin: 0; 
-    padding: 0; 
-    box-sizing: border-box; 
-    font-family: 'Segoe UI', Tahoma, sans-serif; 
+    margin: 0; /* Tüm elementlerin varsayılan dış boşluklarını sıfırlar */
+    padding: 0; /* Tüm elementlerin varsayılan iç boşluklarını sıfırlar */
+    box-sizing: border-box; /* Genişlik ve yükseklik hesaplamalarına padding ve border'ı dahil eder */
+    font-family: 'Segoe UI', Tahoma, sans-serif; /* Oyunun genel yazı tipi ailesi */
 }
 
 body { 
-    background-color: transparent; 
-    overflow: hidden; 
+    background-color: transparent; /* Arka plan rengini saydam yapar (videonun görünmesi için) */
+    overflow: hidden; /* Sayfada kaydırma çubuklarının (scroll) çıkmasını engeller */
 }
 
 /* ==========================================
    VİDEO ARKAPLAN
    ========================================== */
 #bg-video {
-    position: fixed;
+    position: fixed; /* Videoyu ekrana sabitler, kaydırmalardan etkilenmez */
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
-    object-fit: cover;
-    z-index: -100; 
-    pointer-events: none;
-    opacity: 0.8;
+    width: 100vw; /* Ekran genişliğinin tamamını kaplar */
+    height: 100vh; /* Ekran yüksekliğinin tamamını kaplar */
+    object-fit: cover; /* Videonun oranını bozmadan ekranı tamamen doldurmasını sağlar */
+    z-index: -100; /* Videoyu diğer tüm içeriklerin en arkasına atar */
+    pointer-events: none; /* Videoya tıklanmasını veya etkileşime girilmesini engeller */
+    opacity: 0.8; /* Videoya hafif bir şeffaflık vererek ön plandaki yazıların okunmasını kolaylaştırır */
 }
 
 /* ==========================================
    ORTAK EKRAN AYARLARI (Menüler vs.)
    ========================================== */
 .screen {
-    position: absolute; 
+    position: absolute; /* Ekranları sayfanın üstüne tam olarak oturtur */
     top: 0; 
     left: 0; 
     width: 100vw; 
     height: 100vh;
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
-    justify-content: center;
-    background: rgba(15, 23, 42, 0.6); 
-    backdrop-filter: blur(3px); 
+    display: flex; /* İçerikleri esnek kutu modeliyle hizalar */
+    flex-direction: column; /* İçerikleri yukarıdan aşağıya doğru dizer */
+    align-items: center; /* İçerikleri yatay eksende ortalar */
+    justify-content: center; /* İçerikleri dikey eksende ortalar */
+    background: rgba(15, 23, 42, 0.6); /* Yarı saydam, koyu lacivert bir arka plan örtüsü oluşturur */
+    backdrop-filter: blur(3px); /* Arka plandaki videoya hafif bir bulanıklık (blur) efekti verir */
 }
 
 /* ==========================================
-   TİPOGRAFİ
+   TİPOGRAFİ (Yazı Stilleri)
    ========================================== */
+/* Başlıklara ve paragraflara okunaklılığı artırmak için metin gölgesi (text-shadow) eklenmiştir */
 h1 { font-size: 3rem; color: #ffffff; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
 h2 { font-size: 2.5rem; color: #ffffff; margin-bottom: 30px; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
 p { font-size: 1.2rem; color: #ffffff; margin-bottom: 40px; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
@@ -57,47 +58,47 @@ p { font-size: 1.2rem; color: #ffffff; margin-bottom: 40px; text-shadow: 1px 1px
    ========================================== */
 .btn {
     padding: 15px 30px; font-size: 1.2rem; font-weight: bold; border: none;
-    border-radius: 8px; cursor: pointer; transition: all 0.2s ease;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    border-radius: 8px; cursor: pointer; transition: all 0.2s ease; /* Hover veya tıklama animasyonu için yumuşak geçiş */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3); /* Butonlara 3 boyutlu bir derinlik katar */
 }
-.btn:active { transform: translateY(2px); box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+.btn:active { transform: translateY(2px); box-shadow: 0 1px 3px rgba(0,0,0,0.2); } /* Tıklandığında butonun aşağı çökme efekti */
 
-.primary-btn { background-color: #27ae60; color: white; }
-.secondary-btn { background-color: #e74c3c; color: white; margin-top: 20px; }
-.action-btn { background-color: #3498db; color: white; margin-top: 15px; }
-.small-btn { padding: 8px 15px; font-size: 1rem; margin: 0; }
+/* Buton renk varyasyonları */
+.primary-btn { background-color: #27ae60; color: white; } /* Yeşil ana buton */
+.secondary-btn { background-color: #e74c3c; color: white; margin-top: 20px; } /* Kırmızı ikincil buton */
+.action-btn { background-color: #3498db; color: white; margin-top: 15px; } /* Mavi aksiyon butonu */
+.small-btn { padding: 8px 15px; font-size: 1rem; margin: 0; } /* Daha küçük boyutlu butonlar */
 
 /* ==========================================
-   LEVEL BUTONLARI (Ana Menü)
+   LEVEL BUTONLARI (Ana Menüdeki Seviye Izgarası)
    ========================================== */
-#levelGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+#levelGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; } /* Butonları yan yana 3 sütun halinde dizer */
 .level-btn {
     width: 80px; height: 80px; font-size: 2rem; font-weight: bold; border: none;
     border-radius: 12px; background-color: #e74c3c; color: white; cursor: pointer;
-    box-shadow: 0 4px 0 rgba(0,0,0,0.4); transition: all 0.1s ease;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.4); transition: all 0.1s ease; /* Alt kısmında kalın bir gölge ile 3B buton hissi verir */
 }
-.level-btn:active { transform: translateY(4px); box-shadow: none; }
-.level-btn.locked { background-color: #bdc3c7; color: #7f8c8d; box-shadow: 0 4px 0 #95a5a6; cursor: not-allowed; }
+.level-btn:active { transform: translateY(4px); box-shadow: none; } /* Tıklandığında gölgeyi sıfırlayarak butonun basılma hissini verir */
+.level-btn.locked { background-color: #bdc3c7; color: #7f8c8d; box-shadow: 0 4px 0 #95a5a6; cursor: not-allowed; } /* Kilitli seviyeler için gri renk ve yasaklı imleç */
 
 /* ==========================================
    OYUN EKRANI YERLEŞİMİ (KUSURSUZ GRID MİMARİSİ)
    ========================================== */
 .game-layout {
     display: grid;
-    grid-template-columns: 1fr auto 1fr; 
+    grid-template-columns: 1fr auto 1fr; /* Ekranı 3 parçaya böler: Sol (esnek), Orta (içeriğe göre), Sağ (esnek) */
     width: 100vw;
-    align-items: center; 
+    align-items: center; /* İçerikleri dikeyde ortalar */
 }
-
 
 .layout-center {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: center; /* Oyun tuvalini ve başlıkları tam merkeze hizalar */
 }
 
 .layout-right {
-    justify-self: start; 
+    justify-self: start; /* Sağ paneli, kendi grid hücresinin başlangıcına hizalar */
     padding-left: 30px; 
     display: flex;
     height: 100%;
@@ -109,9 +110,9 @@ p { font-size: 1.2rem; color: #ffffff; margin-bottom: 40px; text-shadow: 1px 1px
    ========================================== */
 .game-header { 
     display: flex; 
-    justify-content: space-between; 
+    justify-content: space-between; /* Level yazısı ve butonları iki uca ayırır */
     align-items: flex-end; 
-    width: 600px; 
+    width: 600px; /* Canvas (oyun alanı) ile aynı genişliğe sabitlenmiştir */
     margin-bottom: 10px; 
 }
 
@@ -123,20 +124,20 @@ p { font-size: 1.2rem; color: #ffffff; margin-bottom: 40px; text-shadow: 1px 1px
     margin: 0; 
 }
 
-.header-buttons { display: flex; gap: 10px; }
+.header-buttons { display: flex; gap: 10px; } /* Butonlar arasına boşluk bırakır */
 
 #gameCanvas { 
-    background-color: #2c3e50; 
-    border-radius: 10px; 
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5); 
-    border: 4px solid #34495e;
+    background-color: #2c3e50; /* Labirentin çizildiği alanın arka plan rengi */
+    border-radius: 10px; /* Oyun alanının köşelerini yuvarlatır */
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5); /* Tuvale belirgin bir dış gölge verir */
+    border: 4px solid #34495e; /* Oyun alanının çerçevesi */
 }
 
 .game-controls { 
     display: flex; 
     flex-direction: column; 
     align-items: center; 
-    width: 600px; 
+    width: 600px; /* Kontrol alanını oyun alanıyla hizalar */
     margin-top: 15px; 
 }
 
@@ -144,24 +145,24 @@ p { font-size: 1.2rem; color: #ffffff; margin-bottom: 40px; text-shadow: 1px 1px
     margin-top: 15px; 
     font-size: 1.3rem; 
     font-weight: bold; 
-    min-height: 30px; 
+    min-height: 30px; /* Mesaj olmadığında alanın çökmesini engeller */
     text-shadow: 1px 1px 2px rgba(0,0,0,0.8); 
 }
 
 /* ==========================================
-   İSTATİSTİK KUTUSU VE ANİMASYONLAR
+   İSTATİSTİK KUTUSU VE ANİMASYONLAR (Sağ Panel)
    ========================================== */
 .side-panel {
     display: flex;
     flex-direction: column;
-    min-width: 180px;        
+    min-width: 180px; /* İstatistik kutusunun çok daralmasını engeller */        
 }
 
 .game-stats {
     display: flex;
     flex-direction: column;   
-    gap: 20px;                
-    background: rgba(15, 23, 42, 0.8); 
+    gap: 20px; /* Süre ve hamle sayıları arasındaki boşluk */               
+    background: rgba(15, 23, 42, 0.8); /* İstatistik kutusuna koyu yarı saydam arka plan */
     color: white;
     padding: 25px 20px;
     border-radius: 12px;
@@ -170,14 +171,16 @@ p { font-size: 1.2rem; color: #ffffff; margin-bottom: 40px; text-shadow: 1px 1px
     box-shadow: 0 10px 25px rgba(0,0,0,0.3);
 }
 
+/* Süre veya hamle azaldığında devreye girecek uyarı stili */
 .danger-text {
-    color: #ff4757 !important;
-    animation: pulse 0.5s infinite;
-    display: inline-block; 
+    color: #ff4757 !important; /* Yazıyı dikkat çekici bir kırmızı yapar (!important ile diğer renkleri ezer) */
+    animation: pulse 0.5s infinite; /* Kalp atışı (yanıp sönme) animasyonunu sürekli döngüde çalıştırır */
+    display: inline-block; /* Animasyonun düzgün çalışması için elementi blok seviyesinde hizalar */
 }
 
+/* Uyarı durumu için kalp atışı (büyüyüp küçülme) animasyonunun anahtarları (keyframes) */
 @keyframes pulse {
-    0% { transform: scale(1); opacity: 1; }
-    50% { transform: scale(1.1); opacity: 0.8; }
-    100% { transform: scale(1); opacity: 1; }
+    0% { transform: scale(1); opacity: 1; } /* Başlangıç durumu */
+    50% { transform: scale(1.1); opacity: 0.8; } /* Ortada biraz büyür ve hafif saydamlaşır */
+    100% { transform: scale(1); opacity: 1; } /* Eski haline döner */
 }

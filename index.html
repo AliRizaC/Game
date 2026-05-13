@@ -1,34 +1,52 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+    <!-- Karakter seti ve mobil uyumluluk ayarları -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Tarayıcı sekmesinde görünecek başlık -->
     <title>MAZE BALL - Tam Sürüm</title>
+    
+    <!-- Harici stil dosyasının (CSS) sayfaya bağlanması -->
     <link rel="stylesheet" href="style.css">
+    
+    <!-- Tarayıcı konsolundaki favicon hatasını önlemek için boş bir ikon tanımlaması -->
     <link rel="icon" href="data:,">
 </head>
 <body>
+    <!-- Arka plan videosu (otomatik başlar, sessizdir ve sürekli başa sarar) -->
     <video autoplay muted loop playsinline id="bg-video">
         <source src="images/wallvideo.mp4" type="video/webm">
         <source src="images/wallvideo.mp4" type="video/mp4">
     </video>
+
+    <!-- 1. BAŞLANGIÇ EKRANI (Ana Menü) -->
     <div id="startScreen" class="screen">
         <h1>MAZE BALL</h1>
         <p>Yeşil oktan (Giriş) başla, kırmızı oka (Çıkış) ulaş!</p>
         <button id="startBtn" class="btn primary-btn">Oyuna Başla</button>
     </div>
 
+    <!-- 2. SEVİYE SEÇİM EKRANI (Başlangıçta gizlidir) -->
     <div id="levelScreen" class="screen" style="display: none;">
         <h2>Seviye Seç</h2>
+        <!-- JavaScript ile dinamik olarak doldurulacak seviye butonları alanı -->
         <div id="levelGrid"></div>
         <button id="backBtn" class="btn secondary-btn">Ana Menüye Dön</button>
     </div>
 
+    <!-- 3. ANA OYUN EKRANI (Başlangıçta gizlidir) -->
     <div id="gameScreen" class="screen" style="display: none;">
         <div class="game-layout">
+            
+            <!-- Sol Panel (Tasarım düzenini sağlamak için boş bırakılmış olabilir) -->
             <div class="layout-left"></div>
 
+            <!-- Orta Panel: Oyunun ana oynanış alanı -->
             <div class="layout-center">
+                
+                <!-- Oyun üst bilgisi (Seviye adı ve kontrol butonları) -->
                 <div class="game-header">
                     <h3 id="currentLevelText">Level 1</h3>
                     <div class="header-buttons">
@@ -37,25 +55,32 @@
                     </div>
                 </div>
                 
+                <!-- Labirentin çizileceği ve oynanacağı HTML5 Canvas alanı -->
                 <canvas id="gameCanvas" width="600" height="600"></canvas>
                 
+                <!-- Oyun alt kontrolleri ve mesaj alanı -->
                 <div class="game-controls">
                     <button id="checkPathBtn" class="btn action-btn" style="background-color: #43A047;">Kontrol Et</button>
-                    <p id="messageArea"></p>
+                    <p id="messageArea"></p> <!-- Başarı veya hata mesajları burada gösterilir -->
                 </div>
             </div>
 
+            <!-- Sağ Panel: Oyun içi istatistikler -->
             <div class="layout-right">
                 <div class="side-panel">
                     <div class="game-stats" id="gameStats">
+                        <!-- Kalan süreyi gösteren bölüm -->
                         <div id="timeWrapper">⏱<span id="timeDisplay">30</span> Saniye</div>
+                        <!-- Kalan hamle/dönüş hakkını gösteren bölüm -->
                         <div id="turnWrapper">🔄<span id="turnDisplay">15</span> Hamle</div>
                     </div>
                 </div>
             </div>
+            
         </div>
     </div>
 
+    <!-- Oyunun mantığını ve dinamik işlevlerini çalıştıran JavaScript dosyası -->
     <script src="game.js"></script>
 </body>
 </html>
