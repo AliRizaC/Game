@@ -713,7 +713,7 @@ class GameController {
     }
 }
 
-// 6. BAŞLATICIF
+// 6. BAŞLATICI
 // HTML tamamen yüklendikten sonra motoru çalıştırır.
 window.onload = () => {
     // Tüm sistemi tetikleyen ana kıvılcım.
